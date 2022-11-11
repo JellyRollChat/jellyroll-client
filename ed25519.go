@@ -3,7 +3,6 @@ package main
 import (
 	"crypto/ed25519"
 	"crypto/rand"
-	"encoding/hex"
 	"log"
 )
 
@@ -16,11 +15,8 @@ func initKeys() *Ed25519Keys {
 	keysprivateKey := readFileBytes(privKeyFilePath)
 	keyssignedKey := readFileBytes(signedKeyFilePath)
 	keys.publicKey = keyspublicKey
-	log.Printf("pubk: %s", hex.EncodeToString(keys.publicKey))
 	keys.privateKey = keysprivateKey
-	log.Printf("priv: %s", hex.EncodeToString(keys.privateKey))
 	keys.signedKey = keyssignedKey
-	log.Printf("sign: %s", hex.EncodeToString(keys.signedKey))
 	return &keys
 }
 

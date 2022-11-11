@@ -1,8 +1,9 @@
 package main
 
-var configPath = "config"
-var buddyListPath = configPath + "/buddy.list"
-var GlobalBuddyList Buddylist
+var (
+	GlobalBuddyList   = Buddylist{}
+	GlobalRequestList = Buddylist{}
+)
 
 type Buddylist struct {
 	Buddys []Buddy
@@ -16,6 +17,9 @@ type Buddy struct {
 }
 
 var (
+	configPath        = "config"
+	buddyListPath     = configPath + "/buddy.list"
+	requestListPath   = configPath + "/request.list"
 	keysPath          = configPath + "/keys"
 	pubKeyFilePath    = keysPath + "/pub.key"
 	privKeyFilePath   = keysPath + "/priv.key"

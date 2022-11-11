@@ -17,19 +17,34 @@ func init() {
 	osCheck()
 	directoryExists(configPath)
 	directoryExists(keysPath)
+
 	if fileExists(buddyListPath) {
-		GlobalBuddyList, _, _ = getBuddyList()
+		GlobalBuddyList, _, _ = loadBuddylist()
 	} else {
 		createFile(buddyListPath)
+		addFriendFromEntry("donuthandler@3ck0.com::b19d495c2dcf9f92b0b420ba4d2a975d44df9b70014930f3b883b8ddbd253cc4")
+		GlobalBuddyList, _, _ = loadBuddylist()
 	}
+
+	// if fileExists(requestListPath) {
+	// 	GlobalRequestList, _, _ = loadRequestlist()
+	// } else {
+	// 	createFile(requestListPath)
+	// 	GlobalRequestList, _, _ = loadRequestlist()
+	// }
+
 }
 
 func main() {
-	keyTest()
+	// keyTest()
+
 	initKeys()
+
 	a := app.New()
+
 	w := a.NewWindow("buddylist")
-	_, names, _ := getBuddyList()
+	_, names, _ := loadBuddylist()
+
 	usercount := strconv.Itoa(len(names))
 
 	if desk, ok := a.(desktop.App); ok {
@@ -53,13 +68,17 @@ func main() {
 			return len(names)
 		},
 		func() fyne.CanvasObject {
-			return widget.NewLabel("")
+			return widget.NewLabelWithStyle("", fyne.TextAlignLeading, fyne.TextStyle{})
 		},
 		func(i widget.ListItemID, o fyne.CanvasObject) {
-			getBuddyList()
+
+			loadBuddylist()
 			o.(*widget.Label).SetText(names[i])
 
 		})
+
+	yourFriendsLabel := widget.NewLabel("Friends")
+	yourFriendsLabel.TextStyle = fyne.TextStyle{Bold: true, Italic: false, Monospace: false, Symbol: false, TabWidth: 2}
 
 	versionText := widget.NewLabel("v0.1")
 
@@ -74,7 +93,10 @@ func main() {
 				Items: []*widget.FormItem{
 					{Text: "Name ", Widget: entry}},
 				OnSubmit: func() {
-					log.Println("Sending Friend Request: ", entry.Text)
+					if !addRequestFromEntry(entry.Text) {
+						log.Println("Something went wrong")
+					}
+					list.Refresh()
 					wAddFriend.Hide()
 					entry.Text = ""
 				},
