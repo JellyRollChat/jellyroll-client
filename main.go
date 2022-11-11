@@ -13,11 +13,23 @@ import (
 	"fyne.io/fyne/v2/widget"
 )
 
+func init() {
+	osCheck()
+	directoryExists(configPath)
+	directoryExists(keysPath)
+	if fileExists(buddyListPath) {
+		GlobalBuddyList, _, _ = getBuddyList()
+	} else {
+		createFile(buddyListPath)
+	}
+}
+
 func main() {
+	keyTest()
+	initKeys()
 	a := app.New()
 	w := a.NewWindow("buddylist")
-	_, names := getBuddyList()
-
+	_, names, _ := getBuddyList()
 	usercount := strconv.Itoa(len(names))
 
 	if desk, ok := a.(desktop.App); ok {
@@ -56,7 +68,6 @@ func main() {
 		widget.NewButtonWithIcon("", theme.ContentAddIcon(), func() {
 			wAddFriend := a.NewWindow("add a friend")
 			wAddFriend.Resize(fyne.NewSize(640, 140))
-
 			entry := widget.NewEntry()
 
 			form := &widget.Form{
@@ -75,9 +86,9 @@ func main() {
 
 			wAddFriend.SetContent(addFriendContent)
 			wAddFriend.CenterOnScreen()
-
 			wAddFriend.Show()
 		}),
+
 		layout.NewSpacer(),
 		versionText,
 		layout.NewSpacer(),
@@ -85,6 +96,7 @@ func main() {
 			wSettings := a.NewWindow("settings")
 			wSettings.Resize(fyne.NewSize(760, 420))
 			settingsContent := container.New(layout.NewHBoxLayout(), widget.NewLabel("this"), widget.NewLabel("that"))
+
 			wSettings.SetContent(settingsContent)
 			wSettings.CenterOnScreen()
 			wSettings.Show()
