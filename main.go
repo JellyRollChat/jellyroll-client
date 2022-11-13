@@ -1,7 +1,7 @@
 package main
 
 import (
-	"log"
+	"runtime"
 	"strconv"
 
 	"fyne.io/fyne/v2"
@@ -14,6 +14,11 @@ import (
 )
 
 func init() {
+
+	if !fileExists(logPath) {
+		createFile(logPath)
+	}
+
 	osCheck()
 	directoryExists(configPath)
 	directoryExists(keysPath)
@@ -26,18 +31,12 @@ func init() {
 		GlobalBuddyList, _, _ = loadBuddylist()
 	}
 
-	// if fileExists(requestListPath) {
-	// 	GlobalRequestList, _, _ = loadRequestlist()
-	// } else {
-	// 	createFile(requestListPath)
-	// 	GlobalRequestList, _, _ = loadRequestlist()
-	// }
-
 }
 
 func main() {
 	// keyTest()
 
+	addlog("We're up! [OS: " + runtime.GOOS + "] [ARCH: " + runtime.GOARCH + "] [APP VERSION: " + appver + "]")
 	initKeys()
 
 	a := app.New()
@@ -63,7 +62,7 @@ func main() {
 		desk.SetSystemTrayMenu(m)
 	}
 
-	list := widget.NewList(
+	guiFriendsList := widget.NewList(
 		func() int {
 			return len(names)
 		},
@@ -93,17 +92,14 @@ func main() {
 				Items: []*widget.FormItem{
 					{Text: "Name ", Widget: entry}},
 				OnSubmit: func() {
-					if !addRequestFromEntry(entry.Text) {
-						log.Println("Something went wrong")
-					}
-					list.Refresh()
+					// TODO ADD FRIENDS SOCKET
+					guiFriendsList.Refresh()
 					wAddFriend.Hide()
 					entry.Text = ""
 				},
 				SubmitText: "Add Friend",
 			}
 
-			// we can also append items
 			addFriendContent := container.New(layout.NewVBoxLayout(), widget.NewLabel("Enter your friend's full username in the bow below, then press the Add Friend button."), widget.NewLabel("Example:\tdonuthandler@3ck0.com"), form)
 
 			wAddFriend.SetContent(addFriendContent)
@@ -126,7 +122,7 @@ func main() {
 	)
 
 	w.Resize(fyne.NewSize(240, 480))
-	w.SetContent(container.NewBorder(nil, mainWindowBottomButtonBar, nil, nil, list))
+	w.SetContent(container.NewBorder(nil, mainWindowBottomButtonBar, nil, nil, guiFriendsList))
 	w.SetCloseIntercept(func() {
 		w.Hide()
 	})

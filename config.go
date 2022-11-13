@@ -18,13 +18,15 @@ type Buddy struct {
 
 var (
 	configPath        = "config"
+	logPath           = configPath + "/debug.log"
 	buddyListPath     = configPath + "/buddy.list"
-	requestListPath   = configPath + "/request.list"
 	keysPath          = configPath + "/keys"
 	pubKeyFilePath    = keysPath + "/pub.key"
 	privKeyFilePath   = keysPath + "/priv.key"
 	signedKeyFilePath = keysPath + "/signed.key"
 	// selfCertFilePath  = keysPath + "/self.cert"
+	// requestListPath   = configPath + "/request.list"
+
 )
 
 type Ed25519Keys struct {

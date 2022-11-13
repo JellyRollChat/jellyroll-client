@@ -3,6 +3,10 @@ package main
 import "runtime"
 
 var (
+	appver = "0.1.0"
+)
+
+var (
 	nc            = "\033[0m"
 	brightblack   = "\033[1;30m"
 	brightred     = "\033[1;31m"
@@ -24,6 +28,7 @@ var (
 
 func osCheck() {
 	if runtime.GOOS == "windows" {
+		addlog("OS looks like Windows, removing color from terminal messages")
 		nc = ""
 		brightblack = ""
 		brightred = ""

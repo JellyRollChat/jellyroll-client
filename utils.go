@@ -7,15 +7,24 @@ import (
 )
 
 func directoryExists(dir string) {
-	if _, err := os.Stat(dir); os.IsNotExist(err) {
-		err = os.MkdirAll(dir, 0755)
-		handle("Could not create directory: ", err)
+	addlog("checking if " + dir + " exists")
+	if _, makeDirErr := os.Stat(dir); os.IsNotExist(makeDirErr) {
+		makeDirErr = os.MkdirAll(dir, 0755)
+		addlog(dir + " didn't exist. so we created it.")
+		handle("Could not create directory: ", makeDirErr)
+		if makeDirErr != nil {
+			addlog("lmao jk jk. we tried to create " + dir + " but something went wrong. ")
+		}
 	}
 }
 
 func fileExists(filename string) bool {
 	referencedFile, err := os.Stat(filename)
 	if os.IsNotExist(err) {
+		if filename == logPath {
+			return false
+		}
+		addlog("The file did not exist")
 		return false
 	}
 	return !referencedFile.IsDir()
