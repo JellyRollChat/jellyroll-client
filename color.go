@@ -28,7 +28,6 @@ var (
 
 func osCheck() {
 	if runtime.GOOS == "windows" {
-		addlog("OS looks like Windows, removing color from terminal messages")
 		nc = ""
 		brightblack = ""
 		brightred = ""

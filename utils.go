@@ -7,14 +7,10 @@ import (
 )
 
 func directoryExists(dir string) {
-	addlog("checking if " + dir + " exists")
 	if _, makeDirErr := os.Stat(dir); os.IsNotExist(makeDirErr) {
 		makeDirErr = os.MkdirAll(dir, 0755)
-		addlog(dir + " didn't exist. so we created it.")
 		handle("Could not create directory: ", makeDirErr)
-		if makeDirErr != nil {
-			addlog("lmao jk jk. we tried to create " + dir + " but something went wrong. ")
-		}
+
 	}
 }
 
@@ -24,7 +20,6 @@ func fileExists(filename string) bool {
 		if filename == logPath {
 			return false
 		}
-		addlog("The file did not exist")
 		return false
 	}
 	return !referencedFile.IsDir()
@@ -42,12 +37,10 @@ func createFile(filename string) {
 
 // writeFile Generic file handler
 func writeFile(filename, textToWrite string) {
-	var file, err = os.OpenFile(filename, os.O_RDWR, 0644)
-	handle("", err)
+	var file, _ = os.OpenFile(filename, os.O_RDWR, 0644)
 	defer file.Close()
-	_, err = file.WriteString(textToWrite)
-	err = file.Sync()
-	handle("", err)
+	file.WriteString(textToWrite)
+	file.Sync()
 }
 
 // writeFileBytes Generic file handler
@@ -55,7 +48,7 @@ func writeFileBytes(filename string, bytesToWrite []byte) {
 	var file, err = os.OpenFile(filename, os.O_RDWR, 0644)
 	handle("", err)
 	defer file.Close()
-	_, err = file.Write(bytesToWrite)
+	file.Write(bytesToWrite)
 	err = file.Sync()
 	handle("", err)
 }

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"runtime"
 	"strconv"
 
 	"fyne.io/fyne/v2"
@@ -34,9 +33,7 @@ func init() {
 }
 
 func main() {
-	// keyTest()
-
-	addlog("We're up! [OS: " + runtime.GOOS + "] [ARCH: " + runtime.GOARCH + "] [APP VERSION: " + appver + "]")
+	keyTest()
 	initKeys()
 
 	a := app.New()
